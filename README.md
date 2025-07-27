@@ -13,7 +13,7 @@ A simple, touch-friendly web app for keeping score during ping pong matches.
 
 ## How to Use
 
-1. Open `https://nyanja.github.io/ppscore/` in any web browser
+1. Open [https://nyanja.github.io/ppscore/](https://nyanja.github.io/ppscore/) in any web browser
 2. **Add points**: Tap/click the top half of a player's side
 3. **Subtract points**: Tap/click the bottom half of a player's side
 4. **Mobile gestures**: Swipe up to add, swipe down to subtract
