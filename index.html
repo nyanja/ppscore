@@ -69,7 +69,6 @@
             box-shadow: inset 0 0 0 8px #ff9000;
         }
 
-
         .score {
             font-size: 17rem;
             font-weight: bold;
@@ -98,7 +97,6 @@
             color: #ff9800;
         }
 
-
         @media (max-height: 500px) {
             .header {
                 height: 60px;
@@ -116,7 +114,7 @@
     </div>
 
     <div class="game-area">
-                <div class="player-side left" id="player1"
+        <div class="player-side left" id="player1"
              onclick="handleInput('player1', event)"
              ontouchstart="handleTouch('player1', event)">
             <div class="score" id="score1">0</div>
@@ -179,7 +177,7 @@
             }
         }
 
-                function handleInput(player, event) {
+        function handleInput(player, event) {
             event.preventDefault();
 
             // Determine if click is in top or bottom half
@@ -228,8 +226,6 @@
             element.addEventListener('touchend', handleTouchEnd);
         }
 
-
-
         function restartMatch() {
             scores = { player1: 0, player2: 0 };
             totalPoints = 0;
@@ -253,6 +249,46 @@
 
         // Initialize the game
         initializeGame();
+
+        let wakeLock = null;
+
+        // Request a screen wake lock
+        async function requestWakeLock() {
+            try {
+                if ('wakeLock' in navigator) {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                    console.log('Screen Wake Lock is active');
+
+                    // Listen for wake lock release
+                    wakeLock.addEventListener('release', () => {
+                        console.log('Screen Wake Lock released');
+                    });
+                }
+            } catch (err) {
+                console.error(`${err.name}: ${err.message}`);
+            }
+        }
+
+        // Release the wake lock
+        function releaseWakeLock() {
+            if (wakeLock !== null) {
+                wakeLock.release();
+                wakeLock = null;
+            }
+        }
+
+        // Re-acquire wake lock when page becomes visible again
+        document.addEventListener('visibilitychange', async () => {
+            if (wakeLock !== null && document.visibilityState === 'visible') {
+                wakeLock = await navigator.wakeLock.request('screen');
+            }
+        });
+
+        // Request wake lock when the app starts
+        window.addEventListener('load', requestWakeLock);
+
+        // Optional: Release wake lock when page is about to unload
+        window.addEventListener('beforeunload', releaseWakeLock);
     </script>
 </body>
 </html>
